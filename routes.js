@@ -15,7 +15,7 @@ router.post(
   }
 );
 
-routes.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   passport.authenticate("login", async (err, user, info) => {
     try {
       if (err || !user) {
@@ -35,6 +35,7 @@ routes.post("/login", async (req, res, next) => {
       return next(error);
     }
   });
-})(req, res, next);
+  (req, res, next) => {};
+});
 
 module.exports = router;

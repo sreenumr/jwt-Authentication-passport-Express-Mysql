@@ -6,16 +6,17 @@ passport.use(
   "signup",
   new localStrategy(
     {
-      usernameField: "email",
+      usernameField: "username",
       passwordField: "password"
     },
-    async (email, password, callBack) => {
+    async (username, password, callBack) => {
       try {
-        const user = await createUser({ email, password });
+        const user = await createUser({ username, password });
 
         return callBack(null, user);
       } catch (error) {
         callBack(error);
+        console.log(error);
       }
     }
   )
@@ -25,12 +26,12 @@ passport.use(
   "login",
   new localStrategy(
     {
-      usernameField: "email",
+      usernameField: "username",
       passwordField: "password"
     },
-    async (email, password, callBack) => {
+    async (username, password, callBack) => {
       try {
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ username });
 
         if (!user) {
           return callBack(null, false, { message: "User not found" });
@@ -40,6 +41,7 @@ passport.use(
 
         return callBack(null, user, { messaeg: "Logged In Successfully" });
       } catch (error) {
+        console.log(error);
         return callBack(error);
       }
     }
@@ -53,7 +55,7 @@ passport.use(
   new JWTstrategy(
     {
       secretOrKey: "top_secret",
-      jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token")
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken("secret_token")
     },
     async (token, done) => {
       try {

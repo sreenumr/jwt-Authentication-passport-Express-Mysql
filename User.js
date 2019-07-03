@@ -1,5 +1,3 @@
-var express = require("express");
-var app = express();
 const Sequelize = require("sequelize");
 
 const sequelize = new Sequelize("sys", "sreenu", "password", {

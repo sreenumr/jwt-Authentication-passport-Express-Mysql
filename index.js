@@ -4,36 +4,25 @@ var jwt = require("jsonwebtoken");
 var passport = require("passport");
 var bodyParser = require("body-parser");
 var createUser = require("./User");
+require("./auth");
 
-const user = {
-  username: "james bond",
-  password: "password"
-};
+const routes = require("./routes");
+const secureRoute = require("./secure-routes");
 
-createUser(user);
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-// app.post("/auth", (req, res) => {
-//   res.json({
-//     message: "message created"
-//   });
-// });
+app.use("/", routes);
 
-// app.post("/auth/login", (req, res) => {
-//   //User
-//   const user = {
-//     username: "user@user.com",
-//     password: "password"
-//   };
+app.use("/user", passport.authenticate("jwt", { session: false }), secureRoute);
 
-//   jwt.sign({ user }, "secretkey", (err, token) => {
-//     res.json({
-//       token
-//     });
-//   });
-// });
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.json({ error: err });
+});
 
 app.listen(3000);
