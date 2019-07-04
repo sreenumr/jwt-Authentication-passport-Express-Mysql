@@ -12,7 +12,7 @@ passport.use(
     async (username, password, callBack) => {
       try {
         const user = await createUser({ username, password });
-
+        console.log(user);
         return callBack(null, user);
       } catch (error) {
         callBack(error);

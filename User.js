@@ -19,13 +19,13 @@ Users.init(
 );
 
 const createUser = ({ username, password }) => {
-  Users.build({
+  return Users.build({
     username,
     password
   })
     .save()
-    .then(() => {
-      console.log("Data saved");
+    .then(data => {
+      return data.dataValues;
     })
     .catch(e => {
       console.log(e);
