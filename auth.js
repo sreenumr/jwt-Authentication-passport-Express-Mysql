@@ -1,7 +1,9 @@
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
-const createUser = require("./User");
+const Users = require("./User");
 
+const createUser = Users.createUser;
+const findUser = Users.findUser;
 passport.use(
   "signup",
   new localStrategy(
@@ -31,15 +33,15 @@ passport.use(
     },
     async (username, password, callBack) => {
       try {
-        const user = await UserModel.findOne({ username });
-
+        const user = await findUser(username);
+        console.log(user);
         if (!user) {
           return callBack(null, false, { message: "User not found" });
         }
 
         // const validate = await user.isValidPassword(password)
 
-        return callBack(null, user, { messaeg: "Logged In Successfully" });
+        return callBack(null, user, { message: "Logged In Successfully" });
       } catch (error) {
         console.log(error);
         return callBack(error);
@@ -55,7 +57,7 @@ passport.use(
   new JWTstrategy(
     {
       secretOrKey: "top_secret",
-      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken("secret_token")
+      jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token")
     },
     async (token, done) => {
       try {

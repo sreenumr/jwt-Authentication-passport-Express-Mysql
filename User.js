@@ -32,4 +32,19 @@ const createUser = ({ username, password }) => {
     });
 };
 
-module.exports = createUser;
+const findUser = username => {
+  console.log(username);
+
+  return Users.findOne({ where: { username } })
+    .then(user => {
+      return user.dataValues;
+    })
+    .catch(e => {
+      console.log(e);
+    });
+};
+
+module.exports = {
+  createUser,
+  findUser
+};
