@@ -33,11 +33,10 @@ const createUser = ({ username, password }) => {
 };
 
 const findUser = username => {
-  console.log(username);
-
   return Users.findOne({ where: { username } })
     .then(user => {
-      return user.dataValues;
+      if (user) return user.dataValues;
+      else return null;
     })
     .catch(e => {
       console.log(e);
